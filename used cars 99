@@ -1,0 +1,400 @@
+import numpy as np
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.tree import DecisionTreeRegressor
+
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
+from sklearn.metrics import r2_score
+
+df = pd.read_csv("used_cars.csv")
+
+df["price"] = (
+
+    df["price"]
+
+    .str.replace("$", "", regex=False)
+
+    .str.replace(",", "", regex=False)
+
+    .astype(float)
+
+)
+
+df["milage"] = (
+
+    df["milage"]
+
+    .str.replace(" mi.", "", regex=False)
+
+    .str.replace(",", "", regex=False)
+
+    .astype(float)
+
+)
+
+df = df.dropna(subset=["price"])
+
+df = df.fillna("Unknown")
+
+X = df.drop("price", axis=1)
+
+y = df["price"]
+
+X = pd.get_dummies(X, drop_first=True)
+
+X = X.astype(float)
+
+X = X.replace([np.inf, -np.inf], np.nan)
+
+X = X.fillna(X.median())
+
+X_train, X_test, y_train, y_test = train_test_split(
+
+    X,
+
+    y,
+
+    test_size=0.2,
+
+    random_state=42
+
+)
+
+models = {
+
+    "Linear Regression": LinearRegression(),
+
+    "Decision Tree": DecisionTreeRegressor(
+
+        max_depth=10,
+
+        random_state=42
+
+    ),
+
+    "Random Forest": RandomForestRegressor(
+
+        n_estimators=200,
+
+        max_depth=15,
+
+        random_state=42,
+
+        n_jobs=-1
+
+    ),
+
+    "Gradient Boosting": GradientBoostingRegressor(
+
+        n_estimators=200,
+
+        learning_rate=0.05,
+
+        max_depth=3,
+
+        random_state=42
+
+    )
+
+}
+
+for name, model in models.items():
+
+    model.fit(X_train, y_train)
+
+    prediction = model.predict(X_test)
+
+    r2 = r2_score(y_test, prediction)
+
+    print(f"{name}: R2 = {r2:.4f}")
+
+    print (df.shape)
+
+import numpy as np
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.ensemble import RandomForestRegressor
+
+from sklearn.metrics import r2_score
+
+df = pd.read_csv("used_cars.csv")
+
+df["price"] = (
+
+    df["price"]
+
+    .str.replace("$", "", regex=False)
+
+    .str.replace(",", "", regex=False)
+
+    .astype(float)
+
+)
+
+df["milage"] = (
+
+    df["milage"]
+
+    .str.replace(" mi.", "", regex=False)
+
+    .str.replace(",", "", regex=False)
+
+    .astype(float)
+
+)
+
+df["model_year"] = pd.to_numeric(
+
+    df["model_year"],
+
+    errors="coerce"
+
+)
+
+df["age"] = 2026 - df["model_year"]
+
+df["engine_hp"] = pd.to_numeric(
+
+    df["engine"].str.extract(r"(\d+(?:\.\d+)?)\s*HP")[0],
+
+    errors="coerce"
+
+)
+
+df["engine_liters"] = pd.to_numeric(
+
+    df["engine"].str.extract(r"(\d+\.\d+)\s*L")[0],
+
+    errors="coerce"
+
+)
+
+df["engine_hp"] = df["engine_hp"].fillna(
+
+    df["engine_hp"].median()
+
+)
+
+df["engine_liters"] = df["engine_liters"].fillna(
+
+    df["engine_liters"].median()
+
+)
+
+df["milage"] = df["milage"].fillna(
+
+    df["milage"].median()
+
+)
+
+df["age"] = df["age"].fillna(
+
+    df["age"].median()
+
+)
+
+X = df[
+
+    [
+
+        "model_year",
+
+        "milage",
+
+        "age",
+
+        "engine_hp",
+
+        "engine_liters"
+
+    ]
+
+]
+
+y = df["price"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+
+    X,
+
+    y,
+
+    test_size=0.2,
+
+    random_state=42
+
+)
+
+model = RandomForestRegressor(
+
+    n_estimators=300,
+
+    max_depth=15,
+
+    random_state=42
+
+)
+
+model.fit(X_train, y_train)
+
+prediction = model.predict(X_test)
+
+r2 = r2_score(y_test, prediction)
+
+print("R2:", r2)
+
+print("R2 %:", r2 * 100)
+
+import numpy as np
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.tree import DecisionTreeRegressor
+
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
+from sklearn.metrics import r2_score
+
+df = pd.read_csv("cars.csv")
+
+df = df.drop_duplicates()
+
+df["selling_price"] = pd.to_numeric(
+
+    df["selling_price"],
+
+    errors="coerce"
+
+)
+
+df = df.dropna(subset=["selling_price"])
+
+df = df[df["selling_price"] > 0]
+
+X = df.drop("selling_price", axis=1)
+
+y = df["selling_price"]
+
+X = X.fillna("Unknown")
+
+X = pd.get_dummies(
+
+    X,
+
+    drop_first=True
+
+)
+
+X = X.astype(float)
+
+X = X.replace(
+
+    [np.inf, -np.inf],
+
+    np.nan
+
+)
+
+X = X.fillna(X.median())
+
+X_train, X_test, y_train, y_test = train_test_split(
+
+    X,
+
+    y,
+
+    test_size=0.2,
+
+    random_state=42
+
+)
+
+models = {
+
+    "Linear Regression":
+
+        LinearRegression(),
+
+    "Decision Tree":
+
+        DecisionTreeRegressor(
+
+            max_depth=15,
+
+            min_samples_split=5,
+
+            random_state=42
+
+        ),
+
+    "Random Forest":
+
+        RandomForestRegressor(
+
+            n_estimators=200,
+
+            max_depth=20,
+
+            min_samples_split=4,
+
+            random_state=42,
+
+            n_jobs=-1
+
+        ),
+
+    "Gradient Boosting":
+
+        GradientBoostingRegressor(
+
+            n_estimators=200,
+
+            learning_rate=0.05,
+
+            max_depth=4,
+
+            random_state=42
+
+        )
+
+}
+
+for name, model in models.items():
+
+    model.fit(
+
+        X_train,
+
+        y_train
+
+    )
+
+    prediction = model.predict(X_test)
+
+    r2 = r2_score(
+
+        y_test,
+
+        prediction
+
+    )
+
+    print(
+
+        f"{name}: R2 = {r2:.4f} "
+
+        f"({r2 * 100:.2f}%)" )
+	
