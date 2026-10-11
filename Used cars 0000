@@ -1,0 +1,143 @@
+import numpy as np
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.tree import DecisionTreeRegressor
+
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
+from sklearn.metrics import r2_score
+
+df = pd.read_csv("cars.csv")
+
+df = df.drop_duplicates()
+
+df["selling_price"] = pd.to_numeric(
+
+    df["selling_price"],
+
+    errors="coerce"
+
+)
+
+df = df.dropna(subset=["selling_price"])
+
+df = df[df["selling_price"] > 0]
+
+X = df.drop("selling_price", axis=1)
+
+y = df["selling_price"]
+
+X = X.fillna("Unknown")
+
+X = pd.get_dummies(
+
+    X,
+
+    drop_first=True
+
+)
+
+X = X.astype(float)
+
+X = X.replace(
+
+    [np.inf, -np.inf],
+
+    np.nan
+
+)
+
+X = X.fillna(X.median())
+
+X_train, X_test, y_train, y_test = train_test_split(
+
+    X,
+
+    y,
+
+    test_size=0.2,
+
+    random_state=42
+
+)
+
+models = {
+
+    "Linear Regression":
+
+        LinearRegression(),
+
+    "Decision Tree":
+
+        DecisionTreeRegressor(
+
+            max_depth=15,
+
+            min_samples_split=5,
+
+            random_state=42
+
+        ),
+
+    "Random Forest":
+
+        RandomForestRegressor(
+
+            n_estimators=200,
+
+            max_depth=20,
+
+            min_samples_split=4,
+
+            random_state=42,
+
+            n_jobs=-1
+
+        ),
+
+    "Gradient Boosting":
+
+        GradientBoostingRegressor(
+
+            n_estimators=200,
+
+            learning_rate=0.05,
+
+            max_depth=4,
+
+            random_state=42
+
+        )
+
+}
+
+for name, model in models.items():
+
+    model.fit(
+
+        X_train,
+
+        y_train
+
+    )
+
+    prediction = model.predict(X_test)
+
+    r2 = r2_score(
+
+        y_test,
+
+        prediction
+
+    )
+
+    print(
+
+        f"{name}: R2 = {r2:.4f} "
+
+        f"({r2 * 100:.2f}%)" )
