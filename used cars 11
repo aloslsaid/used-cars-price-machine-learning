@@ -1,0 +1,55 @@
+results.append({
+        "Model": name,
+        "MAE": mean_absolute_error(y_val, predictions),
+        "RMSE": np.sqrt(mean_squared_error(y_val, predictions)),
+        "R2": r2_score(y_val, predictions),
+        "Within 10%": np.mean(
+            np.abs(predictions - actual) / actual <= 0.10
+        ) * 100,
+        "Within 20%": np.mean(
+            np.abs(predictions - actual) / actual <= 0.20
+        ) * 100,
+        "Within 30%": np.mean(
+            np.abs(predictions - actual) / actual <= 0.30
+        ) * 100
+    })
+
+results_df = pd.DataFrame(results).sort_values("MAE")
+print("\n========== VALIDATION RESULTS ==========")
+print(results_df.round(4).to_string(index=False))
+results_df.to_csv("cars_model_comparison.csv", index=False)
+
+best_name = results_df.iloc[0]["Model"]
+print("\nBest model:", best_name)
+
+final_model = create_pipeline(models[best_name])
+final_model.fit(X_train_full, y_train_full)
+
+test_predictions = np.maximum(final_model.predict(X_test), 0)
+actual_test = y_test.to_numpy()
+
+print("\n========== FINAL TEST RESULTS ==========")
+print("Model:", best_name)
+print(f"MAE: {mean_absolute_error(y_test, test_predictions):.2f}")
+print(
+    f"RMSE: {np.sqrt(mean_squared_error(y_test, test_predictions)):.2f}"
+)
+print(f"R2: {r2_score(y_test, test_predictions):.4f}")
+print(
+    f"Within 10%: {np.mean(np.abs(test_predictions - actual_test) / actual_test <= 0.10) * 100:.2f}%"
+)
+print(
+    f"Within 20%: {np.mean(np.abs(test_predictions - actual_test) / actual_test <= 0.20) * 100:.2f}%"
+)
+print(
+    f"Within 30%: {np.mean(np.abs(test_predictions - actual_test) / actual_test <= 0.30) * 100:.2f}%"
+)
+
+output = X_test.copy()
+output["actual_price"] = y_test
+output["predicted_price"] = test_predictions
+output.to_csv("cars_test_predictions.csv", index=False)
+
+print("\nSaved:")
+print("cars_model_comparison.csv")
+print("cars_test_predictions.csv")
