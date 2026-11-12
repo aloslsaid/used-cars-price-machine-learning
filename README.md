@@ -15,3 +15,18 @@ The project description mentions data cleaning, missing-value handling, feature 
 ## Evaluation and privacy
 
 Compare with a baseline using a held-out split; fit encoding and imputation on training data only. Document data provenance, units, split strategy, and metrics. Do not include personal or licensed data without permission. No root test command is currently documented.
+
+
+## Reproducible run
+
+The training script is the extensionless root file `used cars 12`; run it from the repository root so it can find `cars.csv`.
+
+```bash
+python -m venv .venv
+# Activate the environment, then:
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python "used cars 12"
+```
+
+The script writes `cars_model_comparison.csv` and `cars_test_predictions.csv` in the current working directory. It selects the model using validation MAE and evaluates the selected model on a separate test split. The checked-in source should be run to reproduce the metrics; no result is guaranteed by the README.
