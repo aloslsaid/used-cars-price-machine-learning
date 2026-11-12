@@ -1,63 +1,17 @@
-# used cars
-Machine learning project for predicting used car prices. The project includes data cleaning, handling missing values, feature engineering, categorical encoding, and training multiple regression models including Linear Regression, Decision Tree, Random Forest, and Gradient Boosting. The best model achieved an R² score of approximately 0.81.
-Used Car Price Prediction
+# Used Car Price Prediction
 
-This project is about predicting the price of used cars using machine learning.
+An educational machine-learning project for predicting used-car prices. The repository contains `cars.csv` and a folder named `used cars 12`; inspect that folder to find the actual model code and confirm the dataset schema and target column.
 
-I started by loading the dataset and checking the columns, data types, and missing values.
+## Setup
 
-The first thing I focused on was cleaning the data before training any model.
+1. Clone or download the repository.
+2. Review the dataset source, license, column names, and price units.
+3. Inspect `used cars 12` for the training entry point and expected input path.
+4. Create a Python virtual environment and install the dependencies required by the source. No root `requirements.txt` is currently listed.
+5. Run the documented script or notebook command once confirmed from the project files.
 
-I checked for missing values and values that were stored in the wrong format.
+The project description mentions data cleaning, missing-value handling, feature engineering, categorical encoding, and comparisons among regression models. These methods should be verified against the checked-in source. Any previously stated R² value is a project claim, not independently reproduced here.
 
-The price column needed cleaning because some values contained symbols and commas.
+## Evaluation and privacy
 
-After cleaning the price, I converted it into a numerical column.
-
-I also checked the numerical and categorical features separately.
-
-Some categorical features had to be converted into numbers before training.
-
-I used encoding to make these features usable by machine learning models.
-
-I also created useful features from the original data when possible.
-
-After preparing the data, I separated the features from the target price.
-
-Then I split the dataset into training and testing data.
-
-I started with Linear Regression as a simple baseline model.
-
-After that, I tested other models to see if I could improve the results.
-
-The models included Decision Tree, Random Forest, Ridge, KNN, and Gradient Boosting.
-
-I didn’t want to choose a model just because it was more complicated.
-
-Instead, I compared the models using actual results.
-
-For the regression evaluation, I used R², MAE, and RMSE.
-
-R² helped me understand how well the model explained the target values.
-
-MAE showed the average size of the prediction error.
-
-RMSE helped me see the effect of larger prediction errors.
-
-During the project, I changed the preprocessing and tested the models again.
-
-This helped me understand how data preparation affects model performance.
-
-The final model was selected based on its performance on unseen test data.
-
-This project helped me practice the complete machine learning workflow.
-
-I learned that cleaning and preparing the data can be just as important as choosing the model.
-
-what i use
-
-Python, Pandas, NumPy, Matplotlib, and Scikit-learn.
-
-Future Improvements
-
-I would like to add better feature engineering, hyperparameter tuning, cross-validation, and eventually deploy the model as a web application.
+Compare with a baseline using a held-out split; fit encoding and imputation on training data only. Document data provenance, units, split strategy, and metrics. Do not include personal or licensed data without permission. No root test command is currently documented.
